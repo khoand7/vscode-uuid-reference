@@ -1,0 +1,12 @@
+{
+    "uuidReference.sources": [
+        {
+            "path": "${workspaceFolder}/samples/service-registry.json"
+        },
+        {
+            "path": "samples/error-codes.json",
+            "uuidKey": "id",
+            "descriptionKey": "description"
+        }
+    ]
+}

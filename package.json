@@ -1,0 +1,131 @@
+{
+  "name": "vscode-uuid-reference",
+  "displayName": "UUID Reference",
+  "description": "Show human-readable descriptions for UUIDs from your own JSON definition files — via hover, the status bar on selection, and quick lookup commands.",
+  "version": "0.1.0",
+  "publisher": "vscode-uuid-reference-local",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "uuid",
+    "guid",
+    "reference",
+    "lookup",
+    "json",
+    "glossary"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "uuidReference.lookup",
+        "title": "Look Up Selected UUID",
+        "category": "UUID Reference",
+        "icon": "$(key)"
+      },
+      {
+        "command": "uuidReference.browse",
+        "title": "Browse All UUIDs",
+        "category": "UUID Reference",
+        "icon": "$(library)"
+      },
+      {
+        "command": "uuidReference.reload",
+        "title": "Reload Definition Files",
+        "category": "UUID Reference",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "uuidReference.addSource",
+        "title": "Add Definition File…",
+        "category": "UUID Reference",
+        "icon": "$(add)"
+      },
+      {
+        "command": "uuidReference.openSettings",
+        "title": "Open Settings",
+        "category": "UUID Reference",
+        "icon": "$(gear)"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "uuidReference.lookup",
+          "when": "editorHasSelection",
+          "group": "1_modification@100"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "UUID Reference",
+      "properties": {
+        "uuidReference.sources": {
+          "type": "array",
+          "markdownDescription": "JSON files that map UUIDs to descriptions. Add one entry per file — each file may use its own key names. When the same UUID appears in several files, the first source listed wins.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "required": [
+              "path"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string",
+                "markdownDescription": "Path to the JSON file. Supports absolute paths, `~/…`, `${workspaceFolder}/…`, or a path relative to the first workspace folder."
+              },
+              "uuidKey": {
+                "type": "string",
+                "default": "id",
+                "markdownDescription": "Key that contains the UUID. Dot paths (e.g. `meta.id`) are supported. Files that map UUIDs directly (UUID as object key, or UUID → plain string) also work without this setting."
+              },
+              "descriptionKey": {
+                "type": "string",
+                "default": "description",
+                "markdownDescription": "Key that contains the description text. Dot paths (e.g. `details.label`) are supported."
+              }
+            }
+          }
+        },
+        "uuidReference.hover.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the description when hovering over a known UUID in an editor."
+        },
+        "uuidReference.statusBar.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the description of the selected UUID in the status bar."
+        },
+        "uuidReference.statusBar.maxLength": {
+          "type": "number",
+          "default": 60,
+          "minimum": 10,
+          "description": "Maximum number of description characters shown in the status bar."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "node scripts/test-indexer.js && node scripts/smoke-activate.js",
+    "package": "vsce package --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/vscode": "^1.75.0",
+    "@vscode/vsce": "^3.9.2",
+    "typescript": "~5.9.0"
+  }
+}
